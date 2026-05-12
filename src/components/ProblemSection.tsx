@@ -1,5 +1,11 @@
 import Image from "next/image";
 
+const cardStyles = [
+  { bg: "bg-[#EDE8DF]", border: "border-[#DDD6CA]" }, // 따뜻한 샌드
+  { bg: "bg-[#E2DAD0]", border: "border-[#CEC5BB]" }, // 모카 베이지
+  { bg: "bg-[#F0E9E0]", border: "border-[#E0D8CE]" }, // 연한 피치 크림
+];
+
 const problems = [
   {
     icon: "/image/02aa%20(1).png",
@@ -20,23 +26,23 @@ const problems = [
 
 export default function ProblemSection() {
   return (
-    <section className="relative w-full overflow-hidden">
-      {/* 배경 이미지 (오른쪽 절반에 자연스럽게) */}
-      <div className="absolute inset-0">
+    <section className="relative w-full min-h-[700px] overflow-hidden bg-[#FAF7F3] flex items-center">
+
+      {/* 배경 이미지 — 오른쪽 절반에만 표시 (왼쪽 폰트 그림자 차단) */}
+      <div className="absolute right-0 top-0 w-1/2 h-full">
         <Image
           src="/image/02aa%20(6).png"
           alt="유품정리 배경"
           fill
-          className="object-cover object-right"
-          sizes="100vw"
+          className="object-cover object-left"
+          sizes="50vw"
         />
+        {/* 왼쪽 경계 페이드 */}
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#FAF7F3]" />
       </div>
 
-      {/* 왼쪽 크림 그라디언트 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FAF7F3] via-[#FAF7F3]/95 via-55% to-transparent" />
-
       {/* 콘텐츠 */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 py-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 py-16 w-full">
         <div className="max-w-[700px]">
 
           {/* 헤드라인 */}
@@ -50,18 +56,18 @@ export default function ProblemSection() {
 
           {/* 부제목 */}
           <p
-            className="text-lg text-gray-500 mb-14"
+            className="text-lg text-gray-500 mb-12"
             style={{ wordBreak: "keep-all" }}
           >
             유가족분들의 마음을 누구보다 잘 알기에, 그 어려움에 공감합니다.
           </p>
 
           {/* 문제 카드 3개 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-14">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
             {problems.map((p, i) => (
               <div
                 key={i}
-                className="bg-white/60 backdrop-blur-sm border border-stone-200 rounded-2xl p-6 flex flex-col gap-4"
+                className={`${cardStyles[i].bg} border ${cardStyles[i].border} rounded-2xl p-6 flex flex-col gap-4`}
               >
                 <div className="w-14 h-14 relative">
                   <Image
