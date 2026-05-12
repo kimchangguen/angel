@@ -52,7 +52,7 @@ export default function FloatingMenu() {
         const content = (
           <>
             {/* 라벨 — hover 시 왼쪽에서 슥 나타남 */}
-            <span className="absolute right-16 whitespace-nowrap bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-full opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 pointer-events-none select-none">
+            <span className="absolute right-16 whitespace-nowrap bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-full opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 pointer-events-none select-none">
               {label}
             </span>
             {/* 아이콘 */}
