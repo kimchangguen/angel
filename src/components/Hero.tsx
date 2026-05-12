@@ -107,8 +107,13 @@ export default function Hero() {
 
           {/* 서비스 목록 — 2열 2행 그리드 */}
           <ul className="grid grid-cols-2 gap-x-6 gap-y-3 mb-10">
-            {checkItems.map((item) => (
-              <li key={item} className="flex items-center gap-2 text-gray-100 text-sm sm:text-base">
+            {checkItems.map((item, idx) => (
+              <li
+                key={item}
+                className={`flex items-center gap-2 text-gray-100 text-sm sm:text-base${
+                  idx % 2 === 1 ? " -translate-x-[150px]" : ""
+                }`}
+              >
                 <span className="leading-none">✅</span>
                 <span style={{ wordBreak: "keep-all" }}>{item}</span>
               </li>
