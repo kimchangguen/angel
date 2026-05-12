@@ -97,8 +97,8 @@ export default function ProcessSection() {
         {/* 단계 목록 — 번호+아이콘+텍스트를 하나의 열 단위로 묶어 스태거 애니메이션 */}
         <div className="flex items-start">
           {steps.map((step, i) => {
-            // 오른쪽(05)부터 먼저 나타나도록: 인덱스가 클수록 delay 짧게
-            const delay = (steps.length - 1 - i) * 130;
+            // 왼쪽(01)부터 먼저 나타나도록: 인덱스가 작을수록 delay 짧게
+            const delay = i * 130;
 
             return (
               <Fragment key={step.num}>
@@ -107,7 +107,7 @@ export default function ProcessSection() {
                   className="flex-1 flex flex-col items-center text-center"
                   style={{
                     opacity: visible ? 1 : 0,
-                    transform: visible ? "translateX(0)" : "translateX(90px)",
+                    transform: visible ? "translateX(0)" : "translateX(-90px)",
                     transition: "opacity 0.55s ease, transform 0.55s ease",
                     transitionDelay: `${delay}ms`,
                   }}
