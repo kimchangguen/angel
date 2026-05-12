@@ -1,9 +1,9 @@
 import Image from "next/image";
 
 const cardStyles = [
-  { bg: "bg-[#EDE8DF]", border: "border-[#DDD6CA]" }, // 따뜻한 샌드
-  { bg: "bg-[#E2DAD0]", border: "border-[#CEC5BB]" }, // 모카 베이지
-  { bg: "bg-[#F0E9E0]", border: "border-[#E0D8CE]" }, // 연한 피치 크림
+  { bg: "bg-[#EDE8DF]", border: "border-[#DDD6CA]" },
+  { bg: "bg-[#E2DAD0]", border: "border-[#CEC5BB]" },
+  { bg: "bg-[#F0E9E0]", border: "border-[#E0D8CE]" },
 ];
 
 const problems = [
@@ -26,20 +26,21 @@ const problems = [
 
 export default function ProblemSection() {
   return (
-    <section className="relative w-full min-h-[700px] overflow-hidden bg-[#FAF7F3] flex items-center">
+    <section className="relative w-full min-h-[700px] overflow-hidden flex items-center">
 
-      {/* 배경 이미지 — 오른쪽 절반에만 표시 (왼쪽 폰트 그림자 차단) */}
-      <div className="absolute right-0 top-0 w-1/2 h-full">
+      {/* 배경 이미지 — 전체 커버 */}
+      <div className="absolute inset-0">
         <Image
-          src="/image/02aa%20(6).png"
+          src="/image/02aa%20(5).png"
           alt="유품정리 배경"
           fill
-          className="object-cover object-left"
-          sizes="50vw"
+          className="object-cover object-center"
+          sizes="100vw"
         />
-        {/* 왼쪽 경계 페이드 */}
-        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#FAF7F3]" />
       </div>
+
+      {/* 왼쪽 크림 그라디언트 오버레이 */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#FAF7F3] via-[#FAF7F3]/92 via-50% to-transparent" />
 
       {/* 콘텐츠 */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 py-16 w-full">
