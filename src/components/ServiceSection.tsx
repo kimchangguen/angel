@@ -1,4 +1,3 @@
-import Link from "next/link";
 
 const services = [
   {
@@ -123,15 +122,6 @@ export default function ServiceSection() {
           ))}
         </div>
 
-        {/* 하단 CTA */}
-        <div className="text-center">
-          <Link
-            href="/estimate"
-            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-10 py-4 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
-          >
-            📞 24시 무료 견적 상담
-          </Link>
-        </div>
 
       </div>
     </section>
