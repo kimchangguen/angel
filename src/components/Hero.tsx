@@ -66,7 +66,7 @@ export default function Hero() {
 
       {/* 콘텐츠 — 왼쪽 고정, 기존 대비 약 150px 왼쪽 이동 */}
       <div className="absolute inset-0 z-10 flex items-center">
-        <div className="w-full lg:w-[60%] px-6 lg:pl-10 lg:pr-8 text-left">
+        <div className="w-full lg:w-[60%] px-6 lg:pl-[270px] lg:pr-8 text-left">
 
           {/* 배지 */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
