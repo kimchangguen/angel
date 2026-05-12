@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import ProblemSection from "@/components/ProblemSection";
 import ServiceSection from "@/components/ServiceSection";
 import CaseSection from "@/components/CaseSection";
+import ProcessSection from "@/components/ProcessSection";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <ProblemSection />
       <ServiceSection />
       <CaseSection />
+      <ProcessSection />
     </>
   );
 }
