@@ -120,13 +120,22 @@ export default function Hero() {
             ))}
           </ul>
 
-          {/* CTA 버튼 */}
-          <Link
-            href="/estimate"
-            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-xl transition-all duration-200 hover:scale-105"
-          >
-            📞 24시 견적 상담
-          </Link>
+          {/* CTA 버튼 영역 */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <Link
+              href="/estimate"
+              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-xl transition-all duration-200 hover:scale-105"
+            >
+              📞 24시 견적 상담
+            </Link>
+            <a
+              href="tel:01094270522"
+              className="flex items-center gap-2 text-white hover:text-orange-300 transition-colors duration-200"
+            >
+              <span className="text-orange-400 text-lg">📱</span>
+              <span className="font-bold text-xl tracking-wide">010-9427-0522</span>
+            </a>
+          </div>
 
         </div>
       </div>

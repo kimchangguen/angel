@@ -5,7 +5,7 @@ import Link from "next/link";
 const buttons = [
   {
     label: "전화상담",
-    href: "tel:01000000000",
+    href: "tel:01094270522",
     isExternal: false,
     bg: "bg-orange-500 hover:bg-orange-600",
     icon: (
