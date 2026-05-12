@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 const services = [
@@ -75,17 +74,7 @@ const services = [
 
 export default function ServiceSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-white">
-      {/* 배경 이미지 — 오른쪽 장식용 */}
-      <div className="absolute inset-0 opacity-10">
-        <Image
-          src="/image/03aa.png"
-          alt="서비스 배경"
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-      </div>
+    <section className="relative w-full min-h-[600px] bg-white overflow-hidden">
 
       {/* 상단 장식 라인 */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 via-amber-300 to-orange-400" />
