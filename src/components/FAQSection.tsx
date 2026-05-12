@@ -25,7 +25,7 @@ const faqList = [
   { question: "현장이 지방인데 출장 작업도 가능한가요?", answer: "유진천사620은 전국 네트워크망을 구축하고 있어 지역에 상관없이 동일한 퀄리티의 프리미엄 서비스를 제공해 드립니다. (단, 거리에 따라 소정의 출장비가 발생할 수 있으며, 상담 시 안내해 드립니다.)" },
 ];
 
-function AccordionItem({ question, answer, globalIndex }: { question: string; answer: string; globalIndex: number }) {
+function AccordionItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,13 +34,8 @@ function AccordionItem({ question, answer, globalIndex }: { question: string; an
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-gray-50 transition-colors duration-150"
       >
-        <span className="flex items-start gap-3">
-          <span className="flex-none text-orange-500 font-bold text-sm mt-0.5">
-            Q{String(globalIndex + 1).padStart(2, "0")}
-          </span>
-          <span className="font-semibold text-gray-800 text-sm leading-relaxed" style={{ wordBreak: "keep-all" }}>
-            {question}
-          </span>
+        <span className="font-semibold text-gray-800 text-base leading-relaxed" style={{ wordBreak: "keep-all" }}>
+          {question}
         </span>
         <span className="flex-none w-6 h-6 flex items-center justify-center rounded-full border border-gray-200 text-gray-500 text-lg leading-none font-light">
           {open ? "−" : "+"}
@@ -52,9 +47,8 @@ function AccordionItem({ question, answer, globalIndex }: { question: string; an
         className="overflow-hidden transition-all duration-300 ease-in-out"
         style={{ maxHeight: open ? "400px" : "0px" }}
       >
-        <div className="px-5 pb-4 pt-1 flex gap-3">
-          <span className="flex-none text-orange-300 font-bold text-sm mt-0.5">A</span>
-          <p className="text-gray-500 text-sm leading-relaxed" style={{ wordBreak: "keep-all" }}>
+        <div className="px-5 pb-4 pt-1">
+          <p className="text-gray-700 text-base leading-relaxed" style={{ wordBreak: "keep-all" }}>
             {answer}
           </p>
         </div>
@@ -86,14 +80,14 @@ export default function FAQSection() {
           {/* 왼쪽 컬럼 */}
           <div className="flex flex-col gap-3">
             {leftCol.map((item, i) => (
-              <AccordionItem key={i} globalIndex={i} question={item.question} answer={item.answer} />
+              <AccordionItem key={i} question={item.question} answer={item.answer} />
             ))}
           </div>
 
           {/* 오른쪽 컬럼 */}
           <div className="flex flex-col gap-3">
             {rightCol.map((item, i) => (
-              <AccordionItem key={i + 10} globalIndex={i + 10} question={item.question} answer={item.answer} />
+              <AccordionItem key={i + 10} question={item.question} answer={item.answer} />
             ))}
           </div>
         </div>
