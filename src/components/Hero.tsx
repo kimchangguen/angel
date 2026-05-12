@@ -40,7 +40,7 @@ export default function Hero() {
             src={src}
             alt={`유진천사620 배경 이미지 ${i + 1}`}
             fill
-            className="object-cover object-center"
+            className="object-cover object-right md:object-center"
             priority={i === 0}
             sizes="100vw"
           />
