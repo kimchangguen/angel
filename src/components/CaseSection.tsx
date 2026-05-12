@@ -63,15 +63,8 @@ export default function CaseSection() {
                 />
               </div>
 
-              {/* 라벨 (좌: 하늘색 / 우: 남색) */}
-              <div className="flex">
-                <span className="flex-1 text-center text-sm font-semibold text-white bg-sky-400 py-2">
-                  작업사례
-                </span>
-                <span className="flex-1 text-center text-sm font-semibold text-white bg-indigo-800 py-2 truncate px-2">
-                  {post.category}
-                </span>
-              </div>
+              {/* 포스팅 제목 (추후 실제 제목으로 교체) */}
+              <div className="px-3 py-2.5 min-h-[40px]" />
             </Link>
           ))}
         </div>
