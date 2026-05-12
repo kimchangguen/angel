@@ -51,8 +51,7 @@ export default function ProblemSection() {
             className="text-4xl lg:text-5xl font-bold text-gray-800 leading-tight mb-5"
             style={{ wordBreak: "keep-all" }}
           >
-            갑작스러운 이별,<br />
-            혼자 감당하기 힘든 순간들
+            갑작스러운 이별, 혼자 감당하기 힘든 순간들
           </h2>
 
           {/* 부제목 */}
@@ -103,9 +102,7 @@ export default function ProblemSection() {
               className="text-gray-600 text-base leading-relaxed"
               style={{ wordBreak: "keep-all" }}
             >
-              저희는 단순한 청소가 아닌, 유가족의 아픔을 함께 나누며 공간을 정리해드리는 일에 최선을 다합니다.
-              <br />
-              <strong className="text-gray-800">
+              저희는 단순한 청소가 아닌, 유가족의 아픔을 함께 나누며 공간을 정리해드리는 일에 최선을 다합니다. <strong className="text-gray-800">
                 전문적인 정리와 청소로, 새로운 시작을 위한 공간을 만들어 드리겠습니다.
               </strong>
             </p>
