@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState, Fragment } from "react";
+
 const steps = [
   {
     num: "01",
@@ -59,8 +63,25 @@ const steps = [
 ];
 
 export default function ProcessSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="w-full bg-[#F5F0E8] py-24">
+    <section ref={sectionRef} className="w-full bg-[#F5F0E8] py-24 overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 lg:px-12">
 
         {/* 섹션 헤더 */}
@@ -73,45 +94,64 @@ export default function ProcessSection() {
           </p>
         </div>
 
-        {/* 단계 번호 + 화살표 행 */}
-        <div className="flex items-center mb-10">
-          {steps.map((step, i) => (
-            <div key={step.num} className="flex items-center flex-1 last:flex-none">
-              {/* 번호 원 */}
-              <div className="flex-none flex items-center justify-center w-14 h-14 rounded-full bg-[#5C6A3E] text-white font-bold text-xl tracking-tight">
-                {step.num}
-              </div>
-              {/* 화살표 */}
-              {i < steps.length - 1 && (
-                <div className="flex-1 flex items-center justify-center">
-                  <svg width="36" height="16" viewBox="0 0 36 16" fill="none">
-                    <line x1="0" y1="8" x2="28" y2="8" stroke="#8B9C6C" strokeWidth="1.5" strokeDasharray="4 3" />
-                    <path d="M26 3l6 5-6 5" stroke="#8B9C6C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {/* 단계 목록 — 번호+아이콘+텍스트를 하나의 열 단위로 묶어 스태거 애니메이션 */}
+        <div className="flex items-start">
+          {steps.map((step, i) => {
+            // 오른쪽(05)부터 먼저 나타나도록: 인덱스가 클수록 delay 짧게
+            const delay = (steps.length - 1 - i) * 130;
 
-        {/* 아이콘 + 텍스트 행 */}
-        <div className="grid grid-cols-5 gap-4">
-          {steps.map((step) => (
-            <div key={step.num} className="flex flex-col items-center text-center">
-              {/* 아이콘 원 */}
-              <div className="w-24 h-24 rounded-full bg-white shadow-md flex items-center justify-center mb-6 text-[#5C6A3E]">
-                {step.icon}
-              </div>
-              {/* 제목 */}
-              <h3 className="font-bold text-gray-800 text-base mb-3 leading-snug" style={{ wordBreak: "keep-all" }}>
-                {step.title}
-              </h3>
-              {/* 설명 */}
-              <p className="text-gray-500 text-sm leading-relaxed whitespace-pre-line" style={{ wordBreak: "keep-all" }}>
-                {step.desc}
-              </p>
-            </div>
-          ))}
+            return (
+              <Fragment key={step.num}>
+                {/* 단계 열 */}
+                <div
+                  className="flex-1 flex flex-col items-center text-center"
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? "translateX(0)" : "translateX(90px)",
+                    transition: "opacity 0.55s ease, transform 0.55s ease",
+                    transitionDelay: `${delay}ms`,
+                  }}
+                >
+                  {/* 번호 원 */}
+                  <div className="w-14 h-14 rounded-full bg-[#5C6A3E] text-white font-bold text-xl flex items-center justify-center mb-10 z-10 relative">
+                    {step.num}
+                  </div>
+
+                  {/* 아이콘 원 */}
+                  <div className="w-24 h-24 rounded-full bg-white shadow-md flex items-center justify-center mb-6 text-[#5C6A3E]">
+                    {step.icon}
+                  </div>
+
+                  {/* 제목 */}
+                  <h3 className="font-bold text-gray-800 text-base mb-3 leading-snug" style={{ wordBreak: "keep-all" }}>
+                    {step.title}
+                  </h3>
+
+                  {/* 설명 */}
+                  <p className="text-gray-500 text-sm leading-relaxed whitespace-pre-line">
+                    {step.desc}
+                  </p>
+                </div>
+
+                {/* 화살표 — 번호 원 높이 중앙에 위치 (pt: (56-22)/2 = 17px) */}
+                {i < steps.length - 1 && (
+                  <div
+                    className="flex-none flex items-start pt-[17px] text-[#8B9C6C]"
+                    style={{
+                      opacity: visible ? 0.7 : 0,
+                      transition: "opacity 0.4s ease",
+                      transitionDelay: `${delay + 80}ms`,
+                    }}
+                  >
+                    <svg width="32" height="22" viewBox="0 0 32 22" fill="none">
+                      <line x1="0" y1="11" x2="22" y2="11" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 3" />
+                      <path d="M20 5l8 6-8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
+              </Fragment>
+            );
+          })}
         </div>
 
       </div>
