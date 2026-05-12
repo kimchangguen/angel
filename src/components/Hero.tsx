@@ -64,60 +64,60 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* 콘텐츠 — 왼쪽 끝에서 시작, 데스크탑 60% 너비 */}
-      <div className="absolute inset-y-0 left-0 z-10 w-full lg:w-3/5 flex items-center">
-        <div className="w-full px-6 sm:pl-10 lg:pl-32 lg:pr-12 text-left">
+      {/* 콘텐츠 — max-w-7xl 중앙 컨테이너 내 왼쪽 영역 */}
+      <div className="absolute inset-0 z-10 flex items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
+          <div className="w-full lg:w-3/5 text-left p-8 lg:p-16">
 
-          {/* 배지 */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-7">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-            <span className="text-orange-200 text-sm font-medium tracking-wide">
-              유품정리 / 특수청소 전문 그룹
-            </span>
+            {/* 배지 */}
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-7">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+              <span className="text-orange-200 text-sm font-medium tracking-wide">
+                유품정리 / 특수청소 전문 그룹
+              </span>
+            </div>
+
+            {/* 메인 슬로건 */}
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-7"
+              style={{ wordBreak: "keep-all" }}
+            >
+              고인의 아름다운 마무리,
+              <br />
+              남겨진 분들의 마음까지
+              <br />
+              잘 헤아려 정리해 드립니다.
+            </h1>
+
+            {/* 설명문 */}
+            <p
+              className="text-base sm:text-lg text-gray-200 leading-relaxed mb-8"
+              style={{ wordBreak: "keep-all" }}
+            >
+              갑작스러운 이별 뒤 막막한 유품정리, 전문가에게 맡겨주세요.
+              <br className="hidden sm:block" />
+              유족의 무거운 마음을 위로하며 깨끗하게 정리해 드립니다.
+            </p>
+
+            {/* 서비스 목록 — 2열 2행 그리드 */}
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-3 mb-10">
+              {checkItems.map((item) => (
+                <li key={item} className="flex items-center gap-2 text-gray-100 text-sm sm:text-base">
+                  <span className="leading-none">✅</span>
+                  <span style={{ wordBreak: "keep-all" }}>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA 버튼 */}
+            <Link
+              href="/estimate"
+              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-xl transition-all duration-200 hover:scale-105"
+            >
+              📞 24시 견적 상담
+            </Link>
+
           </div>
-
-          {/* 메인 제목 */}
-          <h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.25] mb-7"
-            style={{ wordBreak: "keep-all" }}
-          >
-            고인의 마지막을
-            <br />
-            정성을 다해
-            <br />
-            <span className="text-orange-400">유진천사620</span>이
-            <br />
-            정리합니다.
-          </h1>
-
-          {/* 설명문 */}
-          <p
-            className="text-base sm:text-lg text-gray-200 leading-relaxed mb-8"
-            style={{ wordBreak: "keep-all" }}
-          >
-            갑작스러운 이별 뒤 막막한 유품정리, 전문가에게 맡겨주세요.
-            <br className="hidden sm:block" />
-            유족의 무거운 마음을 위로하며 깨끗하게 정리해 드립니다.
-          </p>
-
-          {/* 서비스 목록 */}
-          <ul className="space-y-2.5 mb-10">
-            {checkItems.map((item) => (
-              <li key={item} className="flex items-center gap-2.5 text-gray-100 text-sm sm:text-base">
-                <span className="text-base leading-none">✅</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* CTA 버튼 */}
-          <Link
-            href="/estimate"
-            className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-xl transition-colors duration-200"
-          >
-            📞 24시 무료 견적 상담 신청
-          </Link>
-
         </div>
       </div>
     </section>
