@@ -10,8 +10,8 @@ export default async function BlogPage() {
   let allPosts: WPPost[] = [];
   
   try {
-    // Fetch latest 40 posts from WordPress
-    allPosts = await getPosts(40);
+    // Fetch latest 60 posts from WordPress
+    allPosts = await getPosts(60);
   } catch (err) {
     console.error("[BlogPage] failed to fetch posts:", err);
   }

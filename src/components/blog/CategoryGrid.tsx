@@ -20,9 +20,9 @@ interface CategorySectionProps {
 
 function CategorySection({ title, slug, posts }: CategorySectionProps) {
   return (
-    <div className="flex-1 bg-white rounded-lg border border-stone-200/80 p-5 shadow-sm">
+    <div className="flex-1 bg-white rounded-lg border border-stone-200/80 p-5 shadow-sm min-h-[350px] flex flex-col">
       {/* Section Header */}
-      <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+      <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-4 flex-shrink-0">
         <h3 className="text-sm md:text-base font-bold text-stone-800 flex items-center gap-1.5 font-[family-name:var(--font-noto-sans-kr)]">
           <span className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
           {title}
@@ -37,7 +37,7 @@ function CategorySection({ title, slug, posts }: CategorySectionProps) {
 
       {/* Posts List Layout */}
       {posts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 content-start">
           {posts.map((post) => (
             <Link
               key={`${post.id}-${post.slug}`}
@@ -68,7 +68,7 @@ function CategorySection({ title, slug, posts }: CategorySectionProps) {
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center py-10 text-stone-400 text-xs font-light">
+        <div className="flex-1 flex items-center justify-center py-10 text-stone-400 text-xs font-light">
           등록된 포스팅이 없습니다.
         </div>
       )}
@@ -87,7 +87,7 @@ export default function CategoryGrid({ postsGroupedBySlug = {} }: CategoryGridPr
     const realPosts = postsGroupedBySlug[slug];
     if (!realPosts || realPosts.length === 0) return [];
     
-    return realPosts.slice(0, 4).map((post) => ({
+    return realPosts.slice(0, 6).map((post) => ({
       id: post.id,
       title: decodeHtmlEntities(post.title.rendered),
       date: formatDate(post.date),
