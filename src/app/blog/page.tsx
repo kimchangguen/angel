@@ -4,7 +4,7 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import { getPosts, WPPost } from "@/lib/wordpress";
 import Link from "next/link";
 
-export const revalidate = 3600; // ISR validation time in seconds (1 hour)
+export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
 
 export default async function BlogPage() {
   let allPosts: WPPost[] = [];

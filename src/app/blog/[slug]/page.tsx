@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-export const revalidate = 3600; // ISR validation time in seconds (1 hour)
+export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
 
 interface BlogPostPageProps {
   params: Promise<{

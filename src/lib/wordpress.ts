@@ -84,7 +84,7 @@ async function fetchGraphQL<T>(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate: 3600 }, // 1 hour caching / ISR
+      cache: "no-store", // 실시간 데이터 연동
       signal: controller.signal,
     });
 
