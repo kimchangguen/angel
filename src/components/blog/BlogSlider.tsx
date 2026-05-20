@@ -15,36 +15,6 @@ interface SliderPost {
   slug: string;
 }
 
-const MOCK_SLIDER_POSTS: SliderPost[] = [
-  {
-    id: 1,
-    title: "유품정리 전 꼭 확인해야 할 3가지 필수 절차와 주의사항",
-    excerpt: "안녕하세요. 유품정리 전문 브랜드 유진천사620입니다. 고인의 소중한 흔적을 정리하는 유품정리는 단순한 청소와 달리 신중하고 경건하게 진행되어야 합니다. 처분해야 할 품목과 보관할 품목을 분류하는 방법부터...",
-    date: "2026년 5월 20일",
-    image: "/image/hero (1).png",
-    category: "유품정리",
-    slug: "test",
-  },
-  {
-    id: 2,
-    title: "화재 현장 및 악취 제거를 위한 특수청소 전문 장비와 정화 과정",
-    excerpt: "안녕하세요. 특수청소 전문 유진천사620입니다. 일반적인 청소 방법으로는 해결되지 않는 미세 오염물질, 잔류 냄새, 악취의 근본적 원인을 파악하여 정화하고 살균 소독하는 전문 공정을 상세히 소개해 드립니다.",
-    date: "2026년 5월 19일",
-    image: "/image/hero (2).png",
-    category: "특수청소",
-    slug: "test-3",
-  },
-  {
-    id: 3,
-    title: "고독사 청소 및 유품 정리업체 선정 시 반드시 비교해야 할 체크리스트",
-    excerpt: "유품정리 및 특수청소 업체를 선택할 때 비용 외에도 정식 등록 업체인지, 소독 인증서를 발급해 줄 수 있는지 등을 상세히 비교하셔야 합니다. 합리적 비용과 신뢰할 수 있는 서비스를 선택하기 위한 가이드입니다.",
-    date: "2026년 5월 18일",
-    image: "/image/hero (3).png",
-    category: "유용한정보",
-    slug: "test-2",
-  },
-];
-
 interface BlogSliderProps {
   posts?: WPPost[];
 }
@@ -53,17 +23,15 @@ export default function BlogSlider({ posts = [] }: BlogSliderProps) {
   const [currentIdx, setCurrentIdx] = useState(0);
 
   // Map real WPPosts to SliderPost structure
-  const displayPosts: SliderPost[] = posts.length > 0 
-    ? posts.slice(0, 5).map((post) => ({
-        id: post.id,
-        title: decodeHtmlEntities(post.title.rendered),
-        excerpt: decodeHtmlEntities(stripHtml(post.excerpt.rendered)),
-        date: formatDate(post.date),
-        image: getFeaturedImage(post) || "/image/hero (1).png",
-        category: post.categories?.[0]?.name || "추천 글",
-        slug: post.slug,
-      }))
-    : MOCK_SLIDER_POSTS;
+  const displayPosts: SliderPost[] = posts.slice(0, 5).map((post) => ({
+    id: post.id,
+    title: decodeHtmlEntities(post.title.rendered),
+    excerpt: decodeHtmlEntities(stripHtml(post.excerpt.rendered)),
+    date: formatDate(post.date),
+    image: getFeaturedImage(post) || "/image/hero (1).png",
+    category: post.categories?.[0]?.name || "추천 글",
+    slug: post.slug,
+  }));
 
   useEffect(() => {
     if (displayPosts.length <= 1) return;
