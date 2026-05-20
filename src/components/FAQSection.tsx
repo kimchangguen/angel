@@ -62,7 +62,7 @@ export default function FAQSection() {
   const rightCol = faqList.slice(10, 20);
 
   return (
-    <section className="w-full bg-gray-50 py-20">
+    <section id="faq" className="w-full bg-gray-50 py-20 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
 
         {/* 타이틀 */}

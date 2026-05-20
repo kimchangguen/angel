@@ -73,7 +73,7 @@ const services = [
 
 export default function ServiceSection() {
   return (
-    <section className="relative w-full min-h-[600px] bg-white overflow-hidden">
+    <section id="services" className="relative w-full min-h-[600px] bg-white overflow-hidden scroll-mt-20">
 
       {/* 상단 장식 라인 */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 via-amber-300 to-orange-400" />

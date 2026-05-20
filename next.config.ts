@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        protocol: "https",
+        hostname: "wordpress-1580849-6411598.cloudwaysapps.com",
+      },
     ],
   },
 };
