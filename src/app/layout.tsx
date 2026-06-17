@@ -91,6 +91,7 @@ export const metadata: Metadata = {
 
   // ── 기타 ──
   verification: {
+    google: "5HO2iF-uhCLVDUZ9YCiC_DfMAvfit96Cgv-3PvAd9ss",
     other: {
       "naver-site-verification": "8281b878ff6fd86e17339ced5874ae8a18d64fb1",
     },
