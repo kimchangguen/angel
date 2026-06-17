@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import BlogSlider from "@/components/blog/BlogSlider";
 import CategoryGrid from "@/components/blog/CategoryGrid";
 import BlogSidebar from "@/components/blog/BlogSidebar";
@@ -5,6 +6,39 @@ import { getPosts, WPPost } from "@/lib/wordpress";
 import Link from "next/link";
 
 export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
+
+const BASE_URL = "https://www.eugeneangel.com";
+
+export const metadata: Metadata = {
+  title: "블로그",
+  description:
+    "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+  alternates: {
+    canonical: `${BASE_URL}/blog`,
+  },
+  openGraph: {
+    type: "website",
+    url: `${BASE_URL}/blog`,
+    title: "블로그 | 유진천사620",
+    description:
+      "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+    images: [
+      {
+        url: `${BASE_URL}/image/hero%20(1).png`,
+        width: 1200,
+        height: 630,
+        alt: "유진천사620 블로그",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "블로그 | 유진천사620",
+    description:
+      "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+    images: [`${BASE_URL}/image/hero%20(1).png`],
+  },
+};
 
 export default async function BlogPage() {
   let allPosts: WPPost[] = [];

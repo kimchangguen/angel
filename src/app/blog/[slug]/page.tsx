@@ -1,10 +1,22 @@
-import { getPost, getPosts, getFeaturedImage, decodeHtmlEntities, formatDate, WPPost } from "@/lib/wordpress";
+import type { Metadata } from "next";
+import {
+  getPost,
+  getPosts,
+  getFeaturedImage,
+  getFirstImage,
+  decodeHtmlEntities,
+  stripHtml,
+  formatDate,
+  WPPost,
+} from "@/lib/wordpress";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
+
+const BASE_URL = "https://www.eugeneangel.com";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -22,6 +34,70 @@ export async function generateStaticParams() {
   } catch (err) {
     console.error("[generateStaticParams] failed:", err);
     return [];
+  }
+}
+
+// Dynamic metadata generation for each blog post
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
+
+  try {
+    const post = await getPost(slug);
+
+    if (!post) {
+      return {
+        title: "글을 찾을 수 없습니다",
+        description: "요청하신 블로그 글을 찾을 수 없습니다.",
+      };
+    }
+
+    const title = decodeHtmlEntities(post.title.rendered);
+    const description = decodeHtmlEntities(
+      stripHtml(post.excerpt.rendered)
+    ).slice(0, 160);
+    const postUrl = `${BASE_URL}/blog/${post.slug}`;
+    const ogImage = getFirstImage(post) || `${BASE_URL}/image/hero%20(1).png`;
+    const categoryName = post.categories?.[0]?.name || "블로그";
+
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: postUrl,
+      },
+      openGraph: {
+        type: "article",
+        url: postUrl,
+        title: `${title} | 유진천사620`,
+        description,
+        siteName: "유진천사620",
+        publishedTime: post.date,
+        section: categoryName,
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${title} | 유진천사620`,
+        description,
+        images: [ogImage],
+      },
+    };
+  } catch (err) {
+    console.error("[generateMetadata] failed:", err);
+    return {
+      title: "블로그",
+      description: "유진천사620 블로그",
+    };
   }
 }
 
