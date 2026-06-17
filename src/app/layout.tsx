@@ -90,7 +90,11 @@ export const metadata: Metadata = {
   },
 
   // ── 기타 ──
-  verification: {},
+  verification: {
+    other: {
+      "naver-site-verification": "8281b878ff6fd86e17339ced5874ae8a18d64fb1",
+    },
+  },
   category: "유품정리",
 };
 
