@@ -130,10 +130,21 @@ export default function Hero() {
             </Link>
             <a
               href="tel:01094270522"
-              className="flex items-center gap-2 text-white hover:text-orange-300 transition-colors duration-200"
+              className="inline-block rounded-2xl transition-all duration-300 hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #f97316, #fb923c, #f97316)',
+                padding: '3px',
+                boxShadow: '0 0 25px rgba(249, 115, 22, 0.5), 0 0 50px rgba(249, 115, 22, 0.2)',
+              }}
             >
-              <span className="text-orange-400 text-lg">📱</span>
-              <span className="font-bold text-xl tracking-wide">010-9427-0522</span>
+              <div
+                className="rounded-2xl px-8 py-4 text-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(30,20,10,0.8))',
+                }}
+              >
+                <span className="font-extrabold text-white tracking-wider drop-shadow-lg" style={{ fontSize: '50px', lineHeight: 1.1 }}>010-9427-0522</span>
+              </div>
             </a>
           </div>
 
