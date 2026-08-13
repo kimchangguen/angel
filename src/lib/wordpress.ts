@@ -326,3 +326,66 @@ export function normalizePostHtml(html: string, imageAlt: string): string {
     .replace(/<(img)\b(?![^>]*\balt=)([^>]*)>/gi, `<$1 alt="${imageAlt.replace(/"/g, "&quot;")}"$2>`)
     .replace(/\b(src|href)=(["'])http:\/\//gi, "$1=$2https://");
 }
+
+export interface PostHeading {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+// Injects anchor ids into h2/h3 tags for table-of-contents navigation
+// without altering the underlying WordPress content.
+export function injectHeadingIds(html: string): {
+  html: string;
+  headings: PostHeading[];
+} {
+  const headings: PostHeading[] = [];
+  const usedIds = new Set<string>();
+
+  const htmlWithIds = html.replace(
+    /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi,
+    (match, level: string, attrs: string, inner: string) => {
+      const text = inner.replace(/<[^>]*>/g, "").trim();
+      if (!text) return match;
+
+      const baseId =
+        text
+          .toLowerCase()
+          .replace(/[^\w가-힣\s-]/g, "")
+          .trim()
+          .replace(/\s+/g, "-")
+          .slice(0, 50) || `section-${headings.length + 1}`;
+
+      let id = baseId;
+      let counter = 1;
+      while (usedIds.has(id)) {
+        id = `${baseId}-${counter++}`;
+      }
+      usedIds.add(id);
+
+      headings.push({ id, text, level: Number(level) as 2 | 3 });
+
+      const hasId = /\sid=/i.test(attrs);
+      const newAttrs = hasId ? attrs : `${attrs} id="${id}"`;
+      return `<h${level}${newAttrs}>${inner}</h${level}>`;
+    }
+  );
+
+  return { html: htmlWithIds, headings };
+}
+
+// Splits post HTML at the first h2/h3 so the intro paragraphs can render
+// above the table of contents, matching typical magazine-article layout.
+export function splitIntroFromContent(html: string): {
+  introHtml: string;
+  restHtml: string;
+} {
+  const match = /<h[23]\b/i.exec(html);
+  if (!match || match.index === 0) {
+    return { introHtml: "", restHtml: html };
+  }
+  return {
+    introHtml: html.slice(0, match.index),
+    restHtml: html.slice(match.index),
+  };
+}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { WPPost, getFeaturedImage, decodeHtmlEntities, formatDate } from "@/lib/wordpress";
+import { SITE } from "@/lib/site";
 
 interface RecentPost {
   id: number;
@@ -27,8 +28,8 @@ export default function BlogSidebar({ recentPosts = [] }: BlogSidebarProps) {
   return (
     <aside className="w-full lg:w-[320px] flex flex-col gap-6">
       {/* Consultation banner card */}
-      <div className="relative w-full rounded-lg overflow-hidden border border-stone-200/80 bg-white shadow-sm flex flex-col">
-        {/* Background visual with female portrait */}
+      <div className="relative w-full rounded-sm overflow-hidden border border-stone-200/80 bg-white flex flex-col">
+        {/* Background visual */}
         <div className="relative w-full h-[220px]">
           <Image
             src="/image/03aa.png"
@@ -42,17 +43,26 @@ export default function BlogSidebar({ recentPosts = [] }: BlogSidebarProps) {
 
         {/* Button */}
         <div className="p-4 bg-white">
+          <p className="text-xs text-stone-500 mb-3 leading-relaxed">
+            유품정리·특수청소, 24시간 무료 상담
+          </p>
+          <a
+            href={`tel:${SITE.phone}`}
+            className="block w-full py-3 mb-2 border border-stone-300 text-stone-800 font-medium text-xs md:text-sm text-center rounded-sm hover:border-orange-300 hover:text-orange-600 transition-colors duration-200"
+          >
+            {SITE.phoneDisplay}
+          </a>
           <Link
             href="/estimate"
-            className="block w-full py-3 bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs md:text-sm text-center rounded transition-all duration-200 shadow hover:shadow-md active:scale-[0.99]"
+            className="block w-full py-3 bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs md:text-sm text-center rounded-sm transition-colors duration-200"
           >
-            촬영 문의하기
+            무료 상담 신청하기
           </Link>
         </div>
       </div>
 
       {/* Recent posts card */}
-      <div className="w-full rounded-lg border border-stone-200/80 bg-white p-5 shadow-sm">
+      <div className="w-full rounded-sm border border-stone-200/80 bg-white p-5">
         <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
           <h3 className="text-sm font-bold text-stone-800 tracking-tight">
             최근 글

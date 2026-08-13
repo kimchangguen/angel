@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   getPost,
   getPosts,
+  getPostsByCategory,
   getFeaturedImage,
   getFirstImage,
   decodeHtmlEntities,
@@ -9,8 +10,14 @@ import {
   formatDate,
   WPPost,
   normalizePostHtml,
+  injectHeadingIds,
+  splitIntroFromContent,
 } from "@/lib/wordpress";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import TableOfContents from "@/components/blog/TableOfContents";
+import RelatedPosts from "@/components/blog/RelatedPosts";
+import PostNavigation from "@/components/blog/PostNavigation";
+import AuthorBox from "@/components/blog/AuthorBox";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -110,17 +117,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const slug = decodeURIComponent(rawSlug);
   
   let post = null;
-  let recentPosts: WPPost[] = [];
+  let latestPosts: WPPost[] = [];
+  let categoryPosts: WPPost[] = [];
 
   try {
-    // Fetch current post and recent posts for sidebar in parallel
-    const [fetchedPost, fetchedRecent] = await Promise.all([
-      getPost(slug),
-      getPosts(5),
+    // Fetch current post first (recent/prev-next lookups depend on nothing else)
+    post = await getPost(slug);
+
+    const [fetchedLatest, fetchedCategory] = await Promise.all([
+      getPosts(50),
+      post?.categories?.[0]?.id
+        ? getPostsByCategory(post.categories[0].id, 4)
+        : Promise.resolve([]),
     ]);
 
-    post = fetchedPost;
-    recentPosts = fetchedRecent || [];
+    latestPosts = fetchedLatest || [];
+    categoryPosts = fetchedCategory || [];
   } catch (err) {
     console.error("[BlogPostPage] fetch failed:", err);
   }
@@ -138,6 +150,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const postUrl = `${SITE.url}/blog/${post.slug}`;
   const description = decodeHtmlEntities(stripHtml(post.excerpt.rendered)).slice(0, 160);
   const articleImage = getFirstImage(post) || SITE.image;
+
+  const recentPosts = latestPosts.slice(0, 5);
+  const relatedPosts = categoryPosts.filter((p) => p.id !== post.id).slice(0, 3);
+
+  const currentIndex = latestPosts.findIndex((p) => p.id === post.id);
+  const prevPost = currentIndex >= 0 ? latestPosts[currentIndex + 1] || null : null;
+  const nextPost = currentIndex > 0 ? latestPosts[currentIndex - 1] || null : null;
+
+  const normalizedHtml = normalizePostHtml(post.content.rendered, title);
+  const { html: contentWithIds, headings } = injectHeadingIds(normalizedHtml);
+  const { introHtml, restHtml } = splitIntroFromContent(contentWithIds);
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-8 px-4 sm:px-6 lg:px-8 border-t border-stone-200/50">
@@ -163,54 +186,95 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* 2-column layout (Content Area + Sidebar) */}
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          
+
           {/* Left Content Area (Main Post) */}
-          <main className="flex-1 w-full bg-white rounded-lg border border-stone-200/80 p-6 md:p-10 shadow-sm">
-            
+          <main className="flex-1 w-full max-w-[880px] bg-white rounded-sm border border-stone-200/80 p-5 sm:p-6 md:p-10">
+
             {/* Post Header */}
-            <header className="mb-8 border-b border-stone-100 pb-6">
-              <span className="bg-orange-100 text-orange-700 text-[10px] md:text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+            <header className="mb-6 md:mb-8 border-b border-stone-100 pb-6">
+              <span className="bg-amber-400 text-stone-900 text-[11px] md:text-xs font-bold px-2.5 py-1 rounded-sm mb-3 inline-block">
                 {categoryName}
               </span>
-              <h1 className="text-xl md:text-3xl font-extrabold text-stone-900 tracking-tight leading-tight mb-4 font-[family-name:var(--font-noto-sans-kr)]">
+              <h1 className="text-[26px] md:text-4xl font-extrabold text-stone-900 tracking-tight leading-[1.35] mb-4 font-[family-name:var(--font-noto-sans-kr)]">
                 {title}
               </h1>
-              <div className="flex items-center gap-3 text-xs text-stone-400 font-light">
-                <span>유진천사620</span>
-                <span>•</span>
-                <span>📅 {dateFormatted}</span>
+              <div className="flex items-center gap-2 text-xs md:text-sm text-stone-500">
+                <span>{dateFormatted}</span>
+                <span>·</span>
+                <span>{SITE.name}</span>
               </div>
             </header>
 
             {/* Featured Image */}
             {featuredImage && (
-              <div className="relative w-full h-[250px] md:h-[420px] rounded-lg overflow-hidden mb-8 border border-stone-100">
+              <div className="relative w-full h-[220px] sm:h-[320px] md:h-[440px] rounded-sm overflow-hidden mb-8 border border-stone-100">
                 <Image
                   src={featuredImage}
                   alt={title}
                   fill
                   priority
-                  sizes="(max-w-900px) 100vw, 900px"
+                  sizes="(max-width: 900px) 100vw, 880px"
                   className="object-cover"
                 />
               </div>
             )}
 
+            {/* Post Intro (content before the first heading) */}
+            {introHtml && (
+              <div
+                className="wordpress-content"
+                dangerouslySetInnerHTML={{ __html: introHtml }}
+              />
+            )}
+
+            {/* Table of Contents */}
+            <TableOfContents headings={headings} />
+
             {/* Post Body (parsed HTML safely rendered) */}
-            <article 
-              className="wordpress-content text-stone-850 text-sm md:text-base font-light leading-relaxed space-y-6"
-              dangerouslySetInnerHTML={{ __html: normalizePostHtml(post.content.rendered, title) }}
+            <article
+              className="wordpress-content"
+              dangerouslySetInnerHTML={{ __html: restHtml }}
             />
 
+            {/* Author info */}
+            <AuthorBox categoryName={categoryName} dateFormatted={dateFormatted} />
+
+            {/* Consultation CTA */}
+            <div className="mt-6 rounded-sm border border-orange-100 bg-orange-50/50 px-5 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <p className="text-sm text-stone-700 leading-relaxed">
+                유품정리·특수청소 관련 문의는 24시간 상담 가능합니다.
+              </p>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <a
+                  href={`tel:${SITE.phone}`}
+                  className="px-4 py-2 text-xs md:text-sm font-semibold text-stone-800 border border-stone-300 rounded-sm hover:border-orange-300 hover:text-orange-600 transition-colors"
+                >
+                  {SITE.phoneDisplay}
+                </a>
+                <Link
+                  href="/estimate"
+                  className="px-4 py-2 text-xs md:text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 rounded-sm transition-colors"
+                >
+                  견적신청
+                </Link>
+              </div>
+            </div>
+
+            {/* Prev / Next post navigation */}
+            <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+
             {/* List back to blog link */}
-            <div className="mt-12 pt-6 border-t border-stone-100 flex justify-between items-center text-xs md:text-sm">
-              <Link 
+            <div className="mt-8 pt-6 border-t border-stone-100">
+              <Link
                 href="/blog"
-                className="px-4 py-2 border border-stone-200 hover:border-orange-300 text-stone-600 hover:text-orange-600 rounded bg-stone-50/50 hover:bg-orange-50/20 transition-all font-medium"
+                className="inline-block px-4 py-2 border border-stone-200 hover:border-orange-300 text-stone-600 hover:text-orange-600 rounded-sm bg-stone-50/50 hover:bg-orange-50/20 transition-all font-medium text-xs md:text-sm"
               >
                 목록으로 돌아가기
               </Link>
             </div>
+
+            {/* Related posts */}
+            <RelatedPosts posts={relatedPosts} />
 
           </main>
 
