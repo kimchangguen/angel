@@ -8,11 +8,14 @@ import {
   stripHtml,
   formatDate,
   WPPost,
+  normalizePostHtml,
 } from "@/lib/wordpress";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import JsonLd from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
 
@@ -51,6 +54,7 @@ export async function generateMetadata({
       return {
         title: "글을 찾을 수 없습니다",
         description: "요청하신 블로그 글을 찾을 수 없습니다.",
+        robots: { index: false, follow: false },
       };
     }
 
@@ -131,9 +135,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const featuredImage = getFeaturedImage(post);
   const categoryName = post.categories?.[0]?.name || "블로그";
   const categorySlug = post.categories?.[0]?.slug || "a";
+  const postUrl = `${SITE.url}/blog/${post.slug}`;
+  const description = decodeHtmlEntities(stripHtml(post.excerpt.rendered)).slice(0, 160);
+  const articleImage = getFirstImage(post) || SITE.image;
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-8 px-4 sm:px-6 lg:px-8 border-t border-stone-200/50">
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [
+        { "@type": ["Article", "BlogPosting"], "@id": `${postUrl}#article`, headline: title, description, image: [articleImage], datePublished: post.date, dateModified: post.modified || post.date, inLanguage: "ko-KR", mainEntityOfPage: { "@id": `${postUrl}#webpage` }, author: { "@id": `${SITE.url}/#organization` }, publisher: { "@id": `${SITE.url}/#organization` }, articleSection: categoryName },
+        { "@type": "WebPage", "@id": `${postUrl}#webpage`, url: postUrl, name: title, isPartOf: { "@id": `${SITE.url}/#website` }, breadcrumb: { "@id": `${postUrl}#breadcrumb` } },
+        { "@type": "BreadcrumbList", "@id": `${postUrl}#breadcrumb`, itemListElement: [{ "@type": "ListItem", position: 1, name: "홈", item: SITE.url }, { "@type": "ListItem", position: 2, name: "블로그", item: `${SITE.url}/blog` }, { "@type": "ListItem", position: 3, name: categoryName, item: `${SITE.url}/blog/category/${categorySlug}` }, { "@type": "ListItem", position: 4, name: title, item: postUrl }] },
+      ] }} />
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Breadcrumbs */}
@@ -187,7 +199,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Post Body (parsed HTML safely rendered) */}
             <article 
               className="wordpress-content text-stone-850 text-sm md:text-base font-light leading-relaxed space-y-6"
-              dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+              dangerouslySetInnerHTML={{ __html: normalizePostHtml(post.content.rendered, title) }}
             />
 
             {/* List back to blog link */}

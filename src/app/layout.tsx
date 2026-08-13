@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingMenu from "@/components/FloatingMenu";
+import JsonLd from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 const notoSansKR = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -11,17 +13,17 @@ const notoSansKR = Noto_Sans_KR({
   weight: ["400", "500", "700"],
 });
 
-const BASE_URL = "https://www.eugeneangel.com";
+const BASE_URL = SITE.url;
 
 export const metadata: Metadata = {
   // ── 기본 메타 ──
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "유진천사620 | 유품정리·특수청소 전문",
+    default: "원주 유품정리·특수청소 전문업체 | 유진천사620 전국 출장",
     template: "%s | 유진천사620",
   },
   description:
-    "유품정리·특수청소 전문 유진천사620. 고인의 마지막을 정성껏 정리하고, 남겨진 분들의 마음까지 헤아립니다. 24시간 상담, 전국 출장 서비스.",
+    SITE.description,
   keywords: [
     "유품정리",
     "특수청소",
@@ -97,6 +99,7 @@ export const metadata: Metadata = {
     },
   },
   category: "유품정리",
+  applicationName: SITE.name,
 };
 
 export default function RootLayout({
@@ -115,6 +118,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-[family-name:var(--font-noto-sans-kr)]">
+        <JsonLd data={{ "@context": "https://schema.org", "@graph": [
+          { "@type": "Organization", "@id": `${SITE.url}/#organization`, name: SITE.name, url: SITE.url, logo: SITE.image, telephone: SITE.phone, email: SITE.email },
+          { "@type": "LocalBusiness", "@id": `${SITE.url}/#localbusiness`, name: SITE.name, url: SITE.url, image: SITE.image, telephone: SITE.phone, email: SITE.email, priceRange: "견적 문의", address: { "@type": "PostalAddress", ...SITE.address }, areaServed: SITE.serviceAreas.map((name) => ({ "@type": "AdministrativeArea", name })), parentOrganization: { "@id": `${SITE.url}/#organization` } },
+          { "@type": "WebSite", "@id": `${SITE.url}/#website`, url: SITE.url, name: SITE.name, inLanguage: "ko-KR", publisher: { "@id": `${SITE.url}/#organization` } },
+        ] }} />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -4,24 +4,26 @@ import CategoryGrid from "@/components/blog/CategoryGrid";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import { getPosts, WPPost } from "@/lib/wordpress";
 import Link from "next/link";
+import JsonLd from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
 
 const BASE_URL = "https://www.eugeneangel.com";
 
 export const metadata: Metadata = {
-  title: "블로그",
+  title: "원주·충주 유품정리 특수청소 현장 사례 블로그",
   description:
-    "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+    "원주·충주·제천 등 전국 유품정리와 특수청소 실제 사례, 비용과 작업 절차를 확인하세요. 현장 전문가의 안내를 읽고 24시간 상담을 요청할 수 있습니다.",
   alternates: {
     canonical: `${BASE_URL}/blog`,
   },
   openGraph: {
     type: "website",
     url: `${BASE_URL}/blog`,
-    title: "블로그 | 유진천사620",
+    title: "원주·충주 유품정리 특수청소 현장 사례 블로그 | 유진천사620",
     description:
-      "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+      "원주·충주·제천 등 전국 유품정리와 특수청소 실제 사례, 비용과 작업 절차를 확인하고 24시간 상담을 요청하세요.",
     images: [
       {
         url: `${BASE_URL}/image/hero%20(1).png`,
@@ -33,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "블로그 | 유진천사620",
+    title: "원주·충주 유품정리 특수청소 현장 사례 블로그 | 유진천사620",
     description:
-      "유진천사620 블로그 – 유품정리 사례, 특수청소 후기, 쓰레기집 청소 팁 등 유용한 정보를 전해드립니다.",
+      "원주·충주·제천 등 전국 유품정리와 특수청소 실제 사례, 비용과 작업 절차를 확인하고 24시간 상담을 요청하세요.",
     images: [`${BASE_URL}/image/hero%20(1).png`],
   },
 };
@@ -75,7 +77,13 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-8 px-4 sm:px-6 lg:px-8 border-t border-stone-200/50">
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [
+        { "@type": "Blog", "@id": `${SITE.url}/blog#blog`, url: `${SITE.url}/blog`, name: "유진천사620 현장 사례 블로그", description: "유품정리와 특수청소 현장 사례 및 전문 정보", inLanguage: "ko-KR", publisher: { "@id": `${SITE.url}/#organization` } },
+        { "@type": "WebPage", "@id": `${SITE.url}/blog#webpage`, url: `${SITE.url}/blog`, name: "원주·충주 유품정리 특수청소 현장 사례 블로그", isPartOf: { "@id": `${SITE.url}/#website` } },
+        { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "홈", item: SITE.url }, { "@type": "ListItem", position: 2, name: "블로그", item: `${SITE.url}/blog` }] },
+      ] }} />
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
+        <h1 className="sr-only">원주·충주 유품정리 및 특수청소 현장 사례</h1>
         
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs text-stone-505 font-light">

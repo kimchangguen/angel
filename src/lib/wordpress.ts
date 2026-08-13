@@ -8,6 +8,7 @@ const WP_GRAPHQL_URL = WP_URL.endsWith("/graphql")
 export interface WPPost {
   id: number;
   date: string;
+  modified?: string;
   slug: string;
   link: string;
   title: { rendered: string };
@@ -36,6 +37,7 @@ export interface WPCategory {
 interface GraphQLPostNode {
   databaseId: number;
   date: string;
+  modified?: string | null;
   slug: string;
   link: string;
   title: string;
@@ -114,6 +116,7 @@ function mapPost(node: GraphQLPostNode): WPPost {
   return {
     id: node.databaseId,
     date: node.date,
+    modified: node.modified || node.date,
     slug: node.slug,
     link: node.link,
     title: { rendered: node.title },
@@ -149,6 +152,7 @@ function mapCategory(node: GraphQLCategoryNode): WPCategory {
 const POST_FIELDS = `
   databaseId
   date
+  modified
   slug
   link
   title
@@ -315,3 +319,10 @@ export function getFirstImage(post: WPPost): string | null {
   return null;
 }
 
+export function normalizePostHtml(html: string, imageAlt: string): string {
+  return html
+    .replace(/<h1\b/gi, "<h2")
+    .replace(/<\/h1>/gi, "</h2>")
+    .replace(/<(img)\b(?![^>]*\balt=)([^>]*)>/gi, `<$1 alt="${imageAlt.replace(/"/g, "&quot;")}"$2>`)
+    .replace(/\b(src|href)=(["'])http:\/\//gi, "$1=$2https://");
+}

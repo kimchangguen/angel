@@ -111,7 +111,7 @@ export default function Hero() {
               <li
                 key={item}
                 className={`flex items-center gap-2 text-gray-100 text-sm sm:text-base${
-                  idx % 2 === 1 ? " -translate-x-[150px]" : ""
+                  idx % 2 === 1 ? " lg:-translate-x-[150px]" : ""
                 }`}
               >
                 <span className="leading-none">✅</span>
@@ -143,7 +143,7 @@ export default function Hero() {
                   background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(30,20,10,0.8))',
                 }}
               >
-                <span className="font-extrabold text-white tracking-wider drop-shadow-lg" style={{ fontSize: '50px', lineHeight: 1.1 }}>010-9427-0522</span>
+                <span className="text-2xl sm:text-4xl lg:text-[50px] leading-tight font-extrabold text-white tracking-wider drop-shadow-lg">010-9427-0522</span>
               </div>
             </a>
           </div>

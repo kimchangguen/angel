@@ -8,16 +8,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
     },
+    { url: `${baseUrl}/estimate`, changeFrequency: "monthly", priority: 0.8 },
+    ...["a", "b", "c", "d"].map((slug) => ({ url: `${baseUrl}/blog/category/${slug}`, changeFrequency: "weekly" as const, priority: 0.7 })),
   ];
 
   // Dynamic blog posts from WordPress

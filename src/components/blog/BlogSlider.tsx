@@ -51,8 +51,6 @@ export default function BlogSlider({ posts = [] }: BlogSliderProps) {
 
   if (displayPosts.length === 0) return null;
 
-  const activePost = displayPosts[currentIdx];
-
   return (
     <div className="relative w-full h-[380px] md:h-[480px] rounded-lg overflow-hidden shadow-md group border border-stone-200 bg-white">
       {/* Slides */}
