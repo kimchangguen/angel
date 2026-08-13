@@ -50,6 +50,7 @@ function CategorySection({ title, slug, posts }: CategorySectionProps) {
                   src={post.image}
                   alt={post.title}
                   fill
+                  unoptimized
                   sizes="75px"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />

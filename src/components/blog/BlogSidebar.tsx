@@ -84,6 +84,7 @@ export default function BlogSidebar({ recentPosts = [] }: BlogSidebarProps) {
                     src={post.image}
                     alt={post.title}
                     fill
+                    unoptimized
                     sizes="70px"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />

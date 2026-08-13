@@ -30,6 +30,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
                   src={getFeaturedImage(post) || "/image/02aa (1).png"}
                   alt={title}
                   fill
+                  unoptimized
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover group-hover:scale-[1.04] transition-transform duration-300"
                 />

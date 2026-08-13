@@ -212,6 +212,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   src={featuredImage}
                   alt={title}
                   fill
+                  unoptimized
                   priority
                   sizes="(max-width: 900px) 100vw, 880px"
                   className="object-cover"

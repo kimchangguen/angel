@@ -71,6 +71,7 @@ export default function BlogSlider({ posts = [] }: BlogSliderProps) {
               src={post.image}
               alt={post.title}
               fill
+              unoptimized
               priority={index === 0}
               sizes="(max-w-1200px) 100vw, 1200px"
               className="object-cover transform scale-100 group-hover:scale-102 transition-transform duration-7000 ease-out"
