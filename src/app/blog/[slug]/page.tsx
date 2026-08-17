@@ -24,8 +24,6 @@ import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
-export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
-
 const BASE_URL = "https://www.eugeneangel.com";
 
 interface BlogPostPageProps {
@@ -121,11 +119,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   let categoryPosts: WPPost[] = [];
 
   try {
-    // Fetch current post first (recent/prev-next lookups depend on nothing else)
+    // getPosts(50) doesn't depend on the post, so start it alongside getPost
+    // instead of waiting for the post to resolve first.
+    const latestPostsPromise = getPosts(50);
     post = await getPost(slug);
 
     const [fetchedLatest, fetchedCategory] = await Promise.all([
-      getPosts(50),
+      latestPostsPromise,
       post?.categories?.[0]?.id
         ? getPostsByCategory(post.categories[0].id, 4)
         : Promise.resolve([]),

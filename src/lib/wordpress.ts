@@ -1,5 +1,13 @@
+import { cache } from "react";
+
 const WP_URL =
   process.env.WP_URL || "https://wordpress-1580849-6411598.cloudwaysapps.com/graphql";
+
+// Revalidation windows (seconds) per data type — see AGENTS.md perf notes.
+const REVALIDATE_POST = 180; // single post detail
+const REVALIDATE_LIST = 180; // post list / recent posts / prev-next lookups
+const REVALIDATE_RELATED = 300; // related posts (category query)
+const REVALIDATE_CATEGORIES = 1800; // categories rarely change
 
 const WP_GRAPHQL_URL = WP_URL.endsWith("/graphql")
   ? WP_URL
@@ -74,19 +82,20 @@ export const CATEGORY_ORDER = [
 
 export type CategorySlug = (typeof CATEGORY_ORDER)[number]["slug"];
 
-async function fetchGraphQL<T>(
+async function fetchGraphQLOnce<T>(
   query: string,
-  variables?: Record<string, unknown>
+  variables: Record<string, unknown> | undefined,
+  revalidateSeconds: number
 ): Promise<T | null> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), 14000);
 
   try {
     const res = await fetch(WP_GRAPHQL_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, variables }),
-      cache: "no-store", // 실시간 데이터 연동
+      next: { revalidate: revalidateSeconds }, // Next.js Data Cache — see wordpress.ts REVALIDATE_* constants
       signal: controller.signal,
     });
 
@@ -107,6 +116,20 @@ async function fetchGraphQL<T>(
   } finally {
     clearTimeout(timeout);
   }
+}
+
+// The Cloudways WP origin is slow enough under load (observed 2.5-5.5s for a
+// single query, worse under concurrent `next build` workers) that one
+// transient timeout would otherwise get permanently baked into a static
+// page as a 404. Retry once before giving up.
+async function fetchGraphQL<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+  revalidateSeconds: number = REVALIDATE_LIST
+): Promise<T | null> {
+  const first = await fetchGraphQLOnce<T>(query, variables, revalidateSeconds);
+  if (first !== null) return first;
+  return fetchGraphQLOnce<T>(query, variables, revalidateSeconds);
 }
 
 function mapPost(node: GraphQLPostNode): WPPost {
@@ -173,10 +196,37 @@ const POST_FIELDS = `
   }
 `;
 
+// Same as POST_FIELDS minus `content` — list/card views never render full
+// article HTML, so omitting it cuts WordPress response time and payload
+// substantially (measured ~3.7x faster, ~9x smaller for a 60-post query).
+const POST_LIST_FIELDS = `
+  databaseId
+  date
+  modified
+  slug
+  link
+  title
+  excerpt
+  featuredImage {
+    node {
+      sourceUrl
+      altText
+    }
+  }
+  categories {
+    nodes {
+      databaseId
+      name
+      slug
+    }
+  }
+`;
+
 export async function getCategories(): Promise<WPCategory[]> {
   const data = await fetchGraphQL<{
     categories: { nodes: GraphQLCategoryNode[] };
-  }>(`
+  }>(
+    `
     query GetCategories {
       categories(first: 50) {
         nodes {
@@ -187,7 +237,10 @@ export async function getCategories(): Promise<WPCategory[]> {
         }
       }
     }
-  `);
+  `,
+    undefined,
+    REVALIDATE_CATEGORIES
+  );
 
   const raw = data?.categories.nodes.map(mapCategory) || [];
   return CATEGORY_ORDER.flatMap((def) => {
@@ -204,12 +257,13 @@ export async function getPosts(perPage = 12): Promise<WPPost[]> {
       query GetPosts($first: Int!) {
         posts(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
           nodes {
-            ${POST_FIELDS}
+            ${POST_LIST_FIELDS}
           }
         }
       }
     `,
-    { first: perPage }
+    { first: perPage },
+    REVALIDATE_LIST
   ) as { posts: { nodes: GraphQLPostNode[] } } | null;
 
   return data?.posts.nodes.map(mapPost) || [];
@@ -234,18 +288,23 @@ export async function getPostsByCategory(
           }
         ) {
           nodes {
-            ${POST_FIELDS}
+            ${POST_LIST_FIELDS}
           }
         }
       }
     `,
-    { first: perPage, categoryId }
+    { first: perPage, categoryId },
+    REVALIDATE_RELATED
   ) as { posts: { nodes: GraphQLPostNode[] } } | null;
 
   return data?.posts.nodes.map(mapPost) || [];
 }
 
-export async function getPost(id: string): Promise<WPPost | null> {
+// Wrapped in React `cache()` so generateMetadata() and the page component
+// share one WordPress round trip per request instead of two — the GraphQL
+// endpoint uses POST, which Next.js's built-in fetch memoization (GET-only)
+// does not deduplicate on its own.
+export const getPost = cache(async (id: string): Promise<WPPost | null> => {
   const numericId = Number(id);
   const data = await fetchGraphQL<{
     post: GraphQLPostNode | null;
@@ -260,11 +319,12 @@ export async function getPost(id: string): Promise<WPPost | null> {
     {
       id: Number.isNaN(numericId) ? id : String(numericId),
       idType: Number.isNaN(numericId) ? "SLUG" : "DATABASE_ID",
-    }
+    },
+    REVALIDATE_POST
   );
 
   return data?.post ? mapPost(data.post) : null;
-}
+});
 
 export function getFeaturedImage(post: WPPost): string | null {
   return post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;

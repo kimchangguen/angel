@@ -7,8 +7,6 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
-export const revalidate = 0; // 매 요청마다 실시간 렌더링 (SSR)
-
 const BASE_URL = "https://www.eugeneangel.com";
 
 export const metadata: Metadata = {
