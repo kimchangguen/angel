@@ -26,23 +26,23 @@ import { SITE } from "@/lib/site";
 
 const BASE_URL = "https://www.eugeneangel.com";
 
+// Vercel's ISR runtime writes an `x-next-cache-tags` response header built
+// from Next's auto-generated soft cache tag for this route (`_N_T_/blog/<slug>`).
+// Since WordPress post slugs are Korean (non-ASCII), any post rendered
+// on-demand — i.e. any post published after the last deploy, since it
+// wasn't part of the build-time static params — crashes Node's header
+// validation (`ERR_INVALID_CHAR`) and the whole request 500s. This is the
+// same reason older posts work fine (served from the static cache, never
+// hitting this code path) while newly published posts 500 every time.
+// Forcing this route fully dynamic skips Next's ISR/Data Cache (and the
+// tag it would attach) entirely, trading per-request WordPress latency for
+// correctness. See AGENTS.md-directed diagnosis for the full writeup.
+export const dynamic = "force-dynamic";
+
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
   }>;
-}
-
-// Generate static params for build time optimization (Next.js compilation)
-export async function generateStaticParams() {
-  try {
-    const posts = await getPosts(30);
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
-  } catch (err) {
-    console.error("[generateStaticParams] failed:", err);
-    return [];
-  }
 }
 
 // Dynamic metadata generation for each blog post
