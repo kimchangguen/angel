@@ -7,7 +7,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
-const BASE_URL = "https://www.eugeneangel.com";
+const BASE_URL = SITE.url;
 
 export const metadata: Metadata = {
   title: "원주·충주 유품정리 특수청소 현장 사례 블로그",

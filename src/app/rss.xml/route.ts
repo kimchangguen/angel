@@ -1,8 +1,9 @@
 import { getPosts, stripHtml, decodeHtmlEntities, WPPost } from "@/lib/wordpress";
+import { SITE, absoluteUrl } from "@/lib/site";
 
 export async function GET() {
-  const baseUrl = "https://www.eugeneangel.com";
-  const siteName = "유진천사620";
+  const baseUrl = SITE.url;
+  const siteName = SITE.name;
   const siteDescription =
     "유품정리·특수청소 전문 유진천사620의 블로그 – 유품정리 사례, 특수청소 정보, 유용한 팁을 전해드립니다.";
 
@@ -28,7 +29,7 @@ export async function GET() {
       const description = escapeXml(
         decodeHtmlEntities(stripHtml(post.excerpt.rendered)).slice(0, 200)
       );
-      const link = `${baseUrl}/blog/${post.slug}`;
+      const link = absoluteUrl(`/blog/${post.slug}`);
       const pubDate = new Date(post.date).toUTCString();
       const category = post.categories?.[0]?.name
         ? `<category>${escapeXml(post.categories[0].name)}</category>`

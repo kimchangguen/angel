@@ -23,10 +23,10 @@ function CategorySection({ title, slug, posts }: CategorySectionProps) {
     <div className="flex-1 bg-white rounded-lg border border-stone-200/80 p-5 shadow-sm min-h-[350px] flex flex-col">
       {/* Section Header */}
       <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-4 flex-shrink-0">
-        <h3 className="text-sm md:text-base font-bold text-stone-800 flex items-center gap-1.5 font-[family-name:var(--font-noto-sans-kr)]">
+        <h2 className="text-sm md:text-base font-bold text-stone-800 flex items-center gap-1.5 font-[family-name:var(--font-noto-sans-kr)]">
           <span className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
           {title}
-        </h3>
+        </h2>
         <Link
           href={`/blog/category/${slug}`}
           className="px-2.5 py-1 text-[10px] md:text-xs font-medium text-stone-500 hover:text-orange-500 border border-stone-200/70 hover:border-orange-200 rounded bg-stone-50/50 hover:bg-orange-50/20 transition-all duration-200"
@@ -61,9 +61,9 @@ function CategorySection({ title, slug, posts }: CategorySectionProps) {
                 <span className="text-[9px] md:text-[10px] text-stone-400 block mb-1">
                   {post.date}
                 </span>
-                <h4 className="text-xs font-semibold text-stone-800 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
+                <h3 className="text-xs font-semibold text-stone-800 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
                   {post.title}
-                </h4>
+                </h3>
               </div>
             </Link>
           ))}

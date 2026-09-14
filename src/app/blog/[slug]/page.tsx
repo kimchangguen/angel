@@ -22,9 +22,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
-import { SITE } from "@/lib/site";
+import { SITE, absoluteUrl } from "@/lib/site";
 
-const BASE_URL = "https://www.eugeneangel.com";
+const BASE_URL = SITE.url;
 
 // Vercel's ISR runtime writes an `x-next-cache-tags` response header built
 // from Next's auto-generated soft cache tag for this route (`_N_T_/blog/<slug>`).
@@ -67,7 +67,7 @@ export async function generateMetadata({
     const description = decodeHtmlEntities(
       stripHtml(post.excerpt.rendered)
     ).slice(0, 160);
-    const postUrl = `${BASE_URL}/blog/${post.slug}`;
+    const postUrl = absoluteUrl(`/blog/${post.slug}`);
     const ogImage = getFirstImage(post) || `${BASE_URL}/image/hero%20(1).png`;
     const categoryName = post.categories?.[0]?.name || "블로그";
 
@@ -147,7 +147,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const featuredImage = getFeaturedImage(post);
   const categoryName = post.categories?.[0]?.name || "블로그";
   const categorySlug = post.categories?.[0]?.slug || "a";
-  const postUrl = `${SITE.url}/blog/${post.slug}`;
+  const postUrl = absoluteUrl(`/blog/${post.slug}`);
   const description = decodeHtmlEntities(stripHtml(post.excerpt.rendered)).slice(0, 160);
   const articleImage = getFirstImage(post) || SITE.image;
 

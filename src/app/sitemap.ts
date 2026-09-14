@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getPosts } from "@/lib/wordpress";
+import { SITE, absoluteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.eugeneangel.com";
+  const baseUrl = SITE.url;
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -25,8 +26,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const posts = await getPosts(100);
     blogPosts = posts.map((post) => ({
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
+      url: absoluteUrl(`/blog/${post.slug}`),
+      lastModified: new Date(post.modified || post.date),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     }));

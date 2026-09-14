@@ -36,7 +36,6 @@ export default function BlogSidebar({ recentPosts = [] }: BlogSidebarProps) {
             alt="상담 신청 안내"
             fill
             sizes="320px"
-            priority
             className="object-cover"
           />
         </div>
